@@ -1,1 +1,1 @@
-# Viz-Europe-Map
+# Visualizations of Europe maps
