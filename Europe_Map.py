@@ -3,6 +3,7 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import streamlit as st
 import pandas as pd
+import numpy as np
 import geopandas as gpd
 from functions import *
 disease_to_variable = {
@@ -47,7 +48,7 @@ try:
 
     # select countries from user
     st.markdown('#### Select countries to display:')
-    countries = st.multiselect('Countries:', df_geo['NAME'].unique())
+    countries = st.multiselect('Countries:', np.sort(df_geo['NAME'].unique()))
 
     # create map
     plot_map(df_geo, wave, disease, countries)
