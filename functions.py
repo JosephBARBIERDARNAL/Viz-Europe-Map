@@ -28,12 +28,12 @@ min_rate, max_rate = 2, 12
 norm = mcolors.Normalize(vmin=min_rate, vmax=max_rate)
 col = '#F7F2EF'
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def open_dataset(disease, wave):
     df = pd.read_csv(f'data/{disease}_rates_wave{wave}.csv')
     return df
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def get_rates(wave, variable, code_to_name=code_to_name, wave_to_year=wave_to_year):
     
     # open datasets
@@ -73,7 +73,7 @@ def get_rates(wave, variable, code_to_name=code_to_name, wave_to_year=wave_to_ye
     rates = df.groupby('Country', observed=True)[variable_name].mean()
     return rates
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def convert_to_geojson(_world, rates, variable_name):
     europe = _world[_world['CONTINENT'] == 'Europe']
     europe = europe.merge(rates, how='left', left_on='NAME', right_on='Country')
@@ -81,7 +81,7 @@ def convert_to_geojson(_world, rates, variable_name):
     europe[variable_name] = round(europe[variable_name]*100,1)
     return europe
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def plot_map(_data, wave, variable_name, countries_from_user, col=col, cmap=cmap, norm=norm):
     
     # axis properties
@@ -172,12 +172,12 @@ def plot_map(_data, wave, variable_name, countries_from_user, col=col, cmap=cmap
 
     st.pyplot(fig)
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def space(n):
     for _ in range(n):
         st.write('')
 
-@st.cache_data(show_spinner=False)
+#@st.cache_data(show_spinner=False)
 def get_suffix(n):
     if n == 1:
         return 'st'
