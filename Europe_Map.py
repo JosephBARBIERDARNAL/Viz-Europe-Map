@@ -25,8 +25,8 @@ year_to_wave = {
 
 # title
 st.title('Disease in Europe')
-st.markdown('#### This app shows the prevalence of various diseases in Europe. The data is from the Survey of Health, Ageing and Retirement in Europe (SHARE).')
-st.markdown('#### The map shows the prevalence of the disease in each country. The darker the color, the higher the prevalence.')
+st.markdown('''#### This app shows the prevalence of various diseases in Europe. The data is from the Survey of Health, Ageing and Retirement in Europe (SHARE) The map shows the prevalence of the disease in each country. The darker the color, the higher the prevalence.''')
+st.markdown('#### You can see the full code on the [GitHub repository](https://github.com/JosephBARBIERDARNAL/Viz-Europe-Map)')
 space(3)
 
 # select disease and wave
@@ -56,7 +56,7 @@ try:
     space(2)
     if st.checkbox('Show raw data'):
         df_to_display = df.copy()
-        df_to_display[disease] = round(df_to_display[disease]*100,2)
+        df_to_display[disease] = round(df_to_display[disease]*100,2).astype(str) + '%'
         st.write(df_to_display.transpose())
 except FileNotFoundError:
     st.error('Data not available for this specific year and disease.')
