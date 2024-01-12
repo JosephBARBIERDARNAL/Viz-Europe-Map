@@ -41,18 +41,22 @@ with col2:
 
 # open datasets
 world = gpd.read_file('data/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp')
-#df = get_rates(wave, variable)
-df = open_dataset(disease, wave)
-df_geo = convert_to_geojson(world, df, disease)
+try:
+    df = open_dataset(disease, wave)
+    df_geo = convert_to_geojson(world, df, disease)
 
-# select countries from user
-st.markdown('#### Select countries to display:')
-countries = st.multiselect('Countries:', df_geo['NAME'].unique())
+    # select countries from user
+    st.markdown('#### Select countries to display:')
+    countries = st.multiselect('Countries:', df_geo['NAME'].unique())
 
-# create map
-plot_map(df_geo, wave, disease, countries)
+    # create map
+    plot_map(df_geo, wave, disease, countries)
 
-# plot raw data
-space(2)
-if st.checkbox('Show raw data'):
-    st.write(df.transpose())
+    # plot raw data
+    space(2)
+    if st.checkbox('Show raw data'):
+        df_to_display = df.copy()
+        df_to_display[disease] = round(df_to_display[disease]*100,2)
+        st.write(df_to_display.transpose())
+except FileNotFoundError:
+    st.error('Data not available for this specific year and disease.')

@@ -28,10 +28,12 @@ min_rate, max_rate = 2, 12
 norm = mcolors.Normalize(vmin=min_rate, vmax=max_rate)
 col = '#F7F2EF'
 
+@st.cache_data(show_spinner=False)
 def open_dataset(disease, wave):
     df = pd.read_csv(f'data/{disease}_rates_wave{wave}.csv')
     return df
 
+@st.cache_data(show_spinner=False)
 def get_rates(wave, variable, code_to_name=code_to_name, wave_to_year=wave_to_year):
     
     # open datasets
@@ -71,14 +73,16 @@ def get_rates(wave, variable, code_to_name=code_to_name, wave_to_year=wave_to_ye
     rates = df.groupby('Country', observed=True)[variable_name].mean()
     return rates
 
-def convert_to_geojson(world, rates, variable_name):
-    europe = world[world['CONTINENT'] == 'Europe']
+@st.cache_data(show_spinner=False)
+def convert_to_geojson(_world, rates, variable_name):
+    europe = _world[_world['CONTINENT'] == 'Europe']
     europe = europe.merge(rates, how='left', left_on='NAME', right_on='Country')
     europe.dropna(subset=[variable_name], inplace=True)
     europe[variable_name] = round(europe[variable_name]*100,1)
     return europe
 
-def plot_map(data, wave, variable_name, countries_from_user, col=col, cmap=cmap, norm=norm):
+@st.cache_data(show_spinner=False)
+def plot_map(_data, wave, variable_name, countries_from_user, col=col, cmap=cmap, norm=norm):
     
     # axis properties
     fig, ax = plt.subplots(1, 1, figsize=(15, 10))
@@ -105,13 +109,13 @@ def plot_map(data, wave, variable_name, countries_from_user, col=col, cmap=cmap,
     fig.set_facecolor(col)
     
     # compute centroids for annotations
-    data_projected = data.to_crs(epsg=3035)
+    data_projected = _data.to_crs(epsg=3035)
     data_projected['centroid'] = data_projected.geometry.centroid
-    data['centroid'] = data_projected['centroid'].to_crs(data.crs)
+    _data['centroid'] = data_projected['centroid'].to_crs(_data.crs)
     
     # get top countries
     n = 2
-    sorted_rates = data.sort_values(variable_name, ascending=False)
+    sorted_rates = _data.sort_values(variable_name, ascending=False)
     top_countries = sorted_rates.head(n)['NAME'].values
     last_countries = sorted_rates.tail(n)['NAME'].values
     middle_countries = sorted_rates.iloc[5:-5]['NAME'].values
@@ -150,11 +154,11 @@ def plot_map(data, wave, variable_name, countries_from_user, col=col, cmap=cmap,
     }
 
     # plot map
-    data.plot(column=variable_name, ax=ax, cmap=cmap)#, norm=norm)
+    _data.plot(column=variable_name, ax=ax, cmap=cmap)#, norm=norm)
     
     # annotate countries
     for country in countries_to_annotate:
-        centroid = data.loc[data['NAME'] == country, 'centroid']
+        centroid = _data.loc[_data['NAME'] == country, 'centroid']
         try:
             centroid = centroid.values[0]
         except:
@@ -162,16 +166,18 @@ def plot_map(data, wave, variable_name, countries_from_user, col=col, cmap=cmap,
         x, y = centroid.coords[0]
         x += adjustments[country][0]
         y += adjustments[country][1]
-        rate = data.loc[data['NAME'] == country, variable_name].values[0]
+        rate = _data.loc[_data['NAME'] == country, variable_name].values[0]
         ax.annotate(f'{country}\n{rate}%', (x, y), textcoords="offset points", xytext=(5,5),
                     ha='center', fontsize=8, fontfamily='DejaVu Sans', fontweight='bold', color='black')
 
     st.pyplot(fig)
 
+@st.cache_data(show_spinner=False)
 def space(n):
     for _ in range(n):
         st.write('')
 
+@st.cache_data(show_spinner=False)
 def get_suffix(n):
     if n == 1:
         return 'st'
