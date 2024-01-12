@@ -40,7 +40,7 @@ with col2:
     wave = year_to_wave[year]
 
 # open datasets
-world = gpd.read_file('../../Desktop/cieri/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp')
+world = gpd.read_file('data/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp')
 #df = get_rates(wave, variable)
 df = open_dataset(disease, wave)
 df_geo = convert_to_geojson(world, df, disease)
