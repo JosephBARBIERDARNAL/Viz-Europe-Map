@@ -171,6 +171,8 @@ def plot_map(_data, wave, variable_name, countries_from_user, col=col, cmap=cmap
                     ha='center', fontsize=8, fontfamily='DejaVu Sans', fontweight='bold', color='black')
 
     st.pyplot(fig)
+    plt.savefig(f'{variable_name}_wave{wave}.png', bbox_inches='tight', dpi=300)
+    return fig
 
 #@st.cache_data(show_spinner=False)
 def space(n):
